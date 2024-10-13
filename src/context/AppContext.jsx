@@ -18,7 +18,11 @@ const AppContextProvider = (props) => {
               const userRef = doc(db,'users',uid);
               const userSnap = await getDoc(userRef);
               const userData = userSnap.data();
+              console.log("Loaded user data:", userData); // Ajoute ce log
+
               setUserData(userData);
+              console.log("Current user ID:", userData ? userData.id : 'userData is null');  // Ajouté ici
+
               if(userData.avatar && userData.name){
                     navigate('/chat');
               }
@@ -28,7 +32,7 @@ const AppContextProvider = (props) => {
               await updateDoc(userRef,{
                 lastSeen:Date.now()
               })
-              setInterval(async ()=>{
+             const intervalId = setInterval(async ()=>{
                    if(auth.chatUser){
                     await updateDoc(userRef,{
                         lastSeen:Date.now()
@@ -36,7 +40,7 @@ const AppContextProvider = (props) => {
                    }
               }, 60000);
 
-              
+              return () =>clearInterval(intervalId);
         }
         catch (error){
 
@@ -46,9 +50,9 @@ const AppContextProvider = (props) => {
     useEffect(()=>{
          if(userData){
           const chatRef = doc(db,'chats',userData.id);
-          const unSub = onSnapshot(chatRef,async () =>{
+          const unSub = onSnapshot(chatRef,async (res) =>{
                const chatItems = res.data().chatsData;
-               console.log(res.data());
+            //    console.log(res.data());
                const tempData = [];
                for(const item of chatItems) {
                       const userRef = doc(db,'users',item.rId);
