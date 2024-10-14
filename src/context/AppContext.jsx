@@ -79,7 +79,13 @@ const AppContextProvider = (props) => {
        setUserData,
        chatData,
        setChataData,
-       loadUserData
+       loadUserData,
+       messages,
+       setMessages,
+       messagesId,
+       setMessagesId,
+       chatUser,
+       setChatUser
    }
 
 
