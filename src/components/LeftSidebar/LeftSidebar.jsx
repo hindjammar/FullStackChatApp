@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import "./LeftSidebar.css";
 import assets from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
-import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AppContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
@@ -96,6 +96,8 @@ const addChat = async () =>{
  const setChat = async (item) =>{
   setMessagesId(item.messageId);
   setChatUser(item)
+  const userChatsRef = doc(db,'chats',userData.id);
+  const userChatsSnapshot = await getDoc(userChatsRef);
 }
 
   return (
@@ -155,7 +157,7 @@ const addChat = async () =>{
           // Affichage des chats existants
           chatData && chatData.length > 0 ? (
             chatData.map((item, index) => (
-              <div onClick={()=>setChat(item)} key={index} className="friends">
+              <div onClick={()=>setChat(item)} key={index} className={`friends ${item.messageSeen || item.messageId === messagesId ? "" : "border"}`}>
                 <img src={item.userData.avatar} alt={item.userData.name} />
                 <div>
                   <p>{item.userData.name}</p>
