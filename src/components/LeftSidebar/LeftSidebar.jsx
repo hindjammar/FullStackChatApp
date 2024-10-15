@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
-  const { userData, chatData, chatUser, setChatUser, setMessagesId, messgaesId } = useContext(AppContext);
+  const { userData, chatData, chatUser, setChatUser, setMessagesId, messagesId } = useContext(AppContext);
   const [user, setUser] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
 
@@ -55,10 +55,10 @@ const LeftSidebar = () => {
   };
 
 const addChat = async () =>{
-   const messageRef = collection(db,"messages");
+   const messagesRef = collection(db,"messages");
    const chatsRef = collection(db,"chats");
    try{
-    const newMessageRef = doc(messageRef);
+    const newMessageRef = doc(messagesRef);
 
     await setDoc(newMessageRef,{
       createAt:serverTimestamp(),
@@ -159,7 +159,7 @@ const addChat = async () =>{
                 <img src={item.userData.avatar} alt={item.userData.name} />
                 <div>
                   <p>{item.userData.name}</p>
-                  <span>{item.lastMessage}</span>
+                  <span>{item.lastMessage ? item.lastMessage : "No message yet"}</span>
                 </div>
               </div>
             ))
